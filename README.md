@@ -45,4 +45,4 @@ npm run cap:sync
 
 ### Download the Android test build
 
-[Download ChargeFX-debug.apk](./ChargeFX-debug.apk) to install the current debug build. This APK is debug-signed and has not been tested on a physical device; it is for testing, not a production release. See the build guide above to create a signed release APK.
+[Open the ChargeFX download website](https://beverlyreed.github.io/kimjiho.dev/download/) or [download ChargeFX-debug.apk](./ChargeFX-debug.apk) directly to install the current debug build. This APK is debug-signed and has not been tested on a physical device; it is for testing, not a production release. See the build guide above to create a signed release APK.
