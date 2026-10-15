@@ -26,7 +26,7 @@ npm run cap:sync
 - Charger connection can create one optional Android notification when enabled and permitted. Tapping it opens the selected charging experience; it never forcibly opens an activity on top of other apps or the lock screen.
 - Notification permission is requested only when the user enables charger notifications on Android 13+.
 - Favorites and settings remain local. The app has no account, analytics, or backend.
-- Android builds require Android Studio/SDK and JDK 21. This environment did not have Java installed, so no APK has been built or device-tested here.
+- Android builds require Android Studio/SDK and JDK 21.
 
 ## Current interaction map
 
