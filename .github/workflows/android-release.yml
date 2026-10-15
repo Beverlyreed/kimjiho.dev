@@ -1,0 +1,67 @@
+name: Android release APK
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Check release signing secrets
+        env:
+          CHARGEFX_KEYSTORE_BASE64: ${{ secrets.CHARGEFX_KEYSTORE_BASE64 }}
+          CHARGEFX_KEYSTORE_PASSWORD: ${{ secrets.CHARGEFX_KEYSTORE_PASSWORD }}
+          CHARGEFX_KEY_ALIAS: ${{ secrets.CHARGEFX_KEY_ALIAS }}
+          CHARGEFX_KEY_PASSWORD: ${{ secrets.CHARGEFX_KEY_PASSWORD }}
+        run: |
+          if [ -z "$CHARGEFX_KEYSTORE_BASE64" ] || [ -z "$CHARGEFX_KEYSTORE_PASSWORD" ] || [ -z "$CHARGEFX_KEY_ALIAS" ] || [ -z "$CHARGEFX_KEY_PASSWORD" ]; then
+            echo "Configure all four CHARGEFX signing secrets before creating a release tag."
+            exit 1
+          fi
+          echo "$CHARGEFX_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/chargefx-release.jks"
+          echo "CHARGEFX_KEYSTORE_PATH=$RUNNER_TEMP/chargefx-release.jks" >> "$GITHUB_ENV"
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build web assets and sync Capacitor
+        run: npm run cap:sync
+
+      - name: Build signed release APK
+        working-directory: android
+        env:
+          CHARGEFX_KEYSTORE_PATH: ${{ env.CHARGEFX_KEYSTORE_PATH }}
+          CHARGEFX_KEYSTORE_PASSWORD: ${{ secrets.CHARGEFX_KEYSTORE_PASSWORD }}
+          CHARGEFX_KEY_ALIAS: ${{ secrets.CHARGEFX_KEY_ALIAS }}
+          CHARGEFX_KEY_PASSWORD: ${{ secrets.CHARGEFX_KEY_PASSWORD }}
+          CHARGEFX_VERSION_CODE: ${{ github.run_number }}
+          CHARGEFX_VERSION_NAME: ${{ github.ref_name }}
+        run: ./gradlew --no-daemon assembleRelease
+
+      - name: Publish APK to GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" android/app/build/outputs/apk/release/app-release.apk --title "ChargeFX $GITHUB_REF_NAME" --generate-notes

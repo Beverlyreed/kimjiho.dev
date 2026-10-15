@@ -1,0 +1,23 @@
+{
+  "name": "chargefx",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "ChargeFX — Make Every Charge a Moment.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "cap:sync": "npm run build && cap sync android",
+    "android:open": "cap open android",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.6.9",
+    "vite": "^6.1.0"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.6.9",
+    "@capacitor/app": "^7.1.2",
+    "@capacitor/core": "^7.6.9"
+  }
+}
