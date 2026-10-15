@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
-def chargefxVersionCode = System.getenv('CHARGEFX_VERSION_CODE')?.toInteger() ?: 1
-def chargefxVersionName = System.getenv('CHARGEFX_VERSION_NAME') ?: '0.1.0'
+def chargefxVersionCode = System.getenv('CHARGEFX_VERSION_CODE')?.toInteger() ?: 2
+def chargefxVersionName = System.getenv('CHARGEFX_VERSION_NAME') ?: '0.1.1'
 
 android {
     namespace "dev.kimjihodev.chargefx"

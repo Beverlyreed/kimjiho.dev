@@ -111,7 +111,7 @@ function favoritesScreen() {
 
 const settingsOptions = [
   ["chargingAnimations", "Charging animations", "Enable animation experiences when charging."],
-  ["automaticActivation", "Charging notification", "On charger connect, show a notification you tap to open."],
+  ["automaticActivation", "Charging notification", "Show a tap-to-open notification when the app is running and a charger connects."],
   ["showPercentage", "Show battery percentage", "Include the percentage in the animation preview."],
   ["batteryEffects", "Battery-level effects", "Let the visual intensity respond to battery level."],
   ["fullChargeEffect", "Full-charge moment", "Celebrate when your device reaches 100%."],
@@ -132,7 +132,7 @@ function settingsScreen() {
       <div class="setting-row"><div><strong>Animation speed</strong><small>Set the pace of visual previews.</small></div><select data-setting-select="animationSpeed"><option value="slow" ${state.settings.animationSpeed === "slow" ? "selected" : ""}>Gentle</option><option value="normal" ${state.settings.animationSpeed === "normal" ? "selected" : ""}>Balanced</option><option value="fast" ${state.settings.animationSpeed === "fast" ? "selected" : ""}>Expressive</option></select></div>
     </section>
     <aside class="about-card glass-panel"><img src="/assets/chargefx-mark.svg" alt="" width="46" height="46"><span class="eyebrow">A NOTE FROM THE MAKER</span><h2>ChargeFX</h2><p>Make Every Charge a Moment.</p><div class="about-divider"></div><small>Designed &amp; Developed by<br><strong>Kim Ji-ho.dev</strong></small><p class="privacy-note">Battery readings are used only to show your charge status. Preferences are kept on-device. Notifications are optional and require your permission. No account or analytics are used.</p><button class="text-button" data-route="about">About &amp; privacy ${icon("back", 14)}</button></aside></div>
-    <footer class="signature">ChargeFX <span>·</span> Version 0.1.0 · Visual prototype</footer>`;
+    <footer class="signature">ChargeFX <span>·</span> Version 0.1.1 · Visual prototype</footer>`;
 }
 
 function aboutScreen() {

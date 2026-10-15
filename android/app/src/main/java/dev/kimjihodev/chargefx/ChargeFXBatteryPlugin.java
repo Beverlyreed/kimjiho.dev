@@ -29,6 +29,7 @@ import com.getcapacitor.annotation.PermissionCallback;
 )
 public class ChargeFXBatteryPlugin extends Plugin {
     private BroadcastReceiver batteryReceiver;
+    private BroadcastReceiver chargingReceiver;
     private boolean pendingChargingRequest;
 
     @Override
@@ -45,6 +46,16 @@ public class ChargeFXBatteryPlugin extends Plugin {
             new IntentFilter(Intent.ACTION_BATTERY_CHANGED),
             ContextCompat.RECEIVER_NOT_EXPORTED
         );
+        chargingReceiver = new ChargingNotificationReceiver();
+        IntentFilter chargingFilter = new IntentFilter();
+        chargingFilter.addAction(Intent.ACTION_POWER_CONNECTED);
+        chargingFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
+        ContextCompat.registerReceiver(
+            getContext(),
+            chargingReceiver,
+            chargingFilter,
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        );
     }
 
     @Override
@@ -52,6 +63,10 @@ public class ChargeFXBatteryPlugin extends Plugin {
         if (batteryReceiver != null) {
             getContext().unregisterReceiver(batteryReceiver);
             batteryReceiver = null;
+        }
+        if (chargingReceiver != null) {
+            getContext().unregisterReceiver(chargingReceiver);
+            chargingReceiver = null;
         }
         super.handleOnDestroy();
     }

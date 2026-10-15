@@ -23,7 +23,7 @@ npm run cap:sync
 ## Android features and limitations
 
 - In the Android app, battery percentage and charging status are read from Android. Browser previews clearly label their example values.
-- Charger connection can create one optional Android notification when enabled and permitted. Tapping it opens the selected charging experience; it never forcibly opens an activity on top of other apps or the lock screen.
+- When enabled and permitted, ChargeFX can show a notification when a charger connects while the app process is running. Tapping it opens the selected charging experience; it never forcibly opens an activity on top of other apps or the lock screen. Android may stop background processes, so notifications are not guaranteed after the app is force-stopped or its process is terminated.
 - Notification permission is requested only when the user enables charger notifications on Android 13+.
 - Favorites and settings remain local. The app has no account, analytics, or backend.
 - Android builds require Android Studio/SDK and JDK 21.
