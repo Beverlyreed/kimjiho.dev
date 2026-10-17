@@ -26,7 +26,7 @@ public class UpdateCheckWorker extends Worker {
     private static final String METADATA_URL =
         "https://beverlyreed.github.io/kimjiho.dev/download/update.json";
     private static final String DOWNLOAD_PAGE =
-        "https://beverlyreed.github.io/kimjiho.dev/download/";
+        "https://beverlyreed.github.io/kimjiho.dev/download/?update=1";
     private static final String CHANNEL_ID = "chargefx_updates";
     private static final int NOTIFICATION_ID = 7402;
     private static final String PREFERENCES = "ChargeFXUpdates";

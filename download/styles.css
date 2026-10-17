@@ -186,6 +186,14 @@ h1 span {
   font-size: 11px;
 }
 
+.download-guidance {
+  max-width: 410px;
+  margin: 9px 0 0;
+  color: #aeb3cc;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
 .meta-dot,
 .footer-dot {
   color: #626785;
