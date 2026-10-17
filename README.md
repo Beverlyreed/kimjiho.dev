@@ -25,7 +25,8 @@ npm run cap:sync
 - In the Android app, battery percentage and charging status are read from Android. Browser previews clearly label their example values.
 - When enabled and permitted, ChargeFX can show a notification when a charger connects while the app process is running. Tapping it opens the selected charging experience; it never forcibly opens an activity on top of other apps or the lock screen. Android may stop background processes, so notifications are not guaranteed after the app is force-stopped or its process is terminated.
 - Notification permission is requested only when the user enables charger notifications on Android 13+.
-- Favorites and settings remain local. The app has no account, analytics, or backend.
+- Version 0.1.2 and newer can check for updates daily in the background. Update alerts require notification permission and open the download page; Android requires user approval to install APK updates. Earlier versions must be updated manually once to gain the update checker.
+- Favorites and settings remain local. The app has no account or analytics; optional update checks only download a public version file.
 - Android builds require Android Studio/SDK and JDK 21.
 
 ## Current interaction map

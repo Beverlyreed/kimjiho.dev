@@ -98,8 +98,13 @@ public class ChargeFXBatteryPlugin extends Plugin {
             .edit()
             .putBoolean("chargingAnimations", call.getBoolean("chargingAnimations", true))
             .putBoolean("automaticActivation", call.getBoolean("automaticActivation", false))
+            .putBoolean("updateNotifications", call.getBoolean("updateNotifications", true))
             .putString("selectedAnimation", call.getString("selectedAnimation", "liquid-pulse"))
             .apply();
+        UpdateCheckScheduler.configure(
+            getContext(),
+            call.getBoolean("updateNotifications", true)
+        );
         call.resolve();
     }
 

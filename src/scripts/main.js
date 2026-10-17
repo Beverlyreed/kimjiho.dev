@@ -112,6 +112,7 @@ function favoritesScreen() {
 const settingsOptions = [
   ["chargingAnimations", "Charging animations", "Enable animation experiences when charging."],
   ["automaticActivation", "Charging notification", "Show a tap-to-open notification when the app is running and a charger connects."],
+  ["updateNotifications", "App update notifications", "Check daily in the background and notify when a newer version is available."],
   ["showPercentage", "Show battery percentage", "Include the percentage in the animation preview."],
   ["batteryEffects", "Battery-level effects", "Let the visual intensity respond to battery level."],
   ["fullChargeEffect", "Full-charge moment", "Celebrate when your device reaches 100%."],
@@ -125,18 +126,18 @@ function settingsScreen() {
     <div class="settings-layout"><section class="settings-card glass-panel"><div class="settings-card-heading"><span class="eyebrow">YOUR EXPERIENCE</span><h2>Animation settings</h2></div>
       <div class="setting-row"><div><strong>Default animation</strong><small>Choose the look for your next charge.</small></div><select id="default-animation">${animations.map((animation) => `<option value="${animation.id}" ${animation.id === state.selectedAnimation ? "selected" : ""}>${animation.name}</option>`).join("")}</select></div>
       ${settingsOptions.map(([key, label, description]) => {
-        const androidOnly = key === "automaticActivation" && !Capacitor.isNativePlatform();
+        const androidOnly = ["automaticActivation", "updateNotifications"].includes(key) && !Capacitor.isNativePlatform();
         const helper = androidOnly ? "Available in the installed Android app; not active in this browser." : description;
         return `<label class="setting-row"><span><strong>${label}</strong><small>${helper}</small></span><input class="switch-input" type="checkbox" data-setting="${key}" ${state.settings[key] ? "checked" : ""} ${androidOnly ? "disabled" : ""} aria-label="${label}"></label>`;
       }).join("")}
       <div class="setting-row"><div><strong>Animation speed</strong><small>Set the pace of visual previews.</small></div><select data-setting-select="animationSpeed"><option value="slow" ${state.settings.animationSpeed === "slow" ? "selected" : ""}>Gentle</option><option value="normal" ${state.settings.animationSpeed === "normal" ? "selected" : ""}>Balanced</option><option value="fast" ${state.settings.animationSpeed === "fast" ? "selected" : ""}>Expressive</option></select></div>
     </section>
     <aside class="about-card glass-panel"><img src="/assets/chargefx-mark.svg" alt="" width="46" height="46"><span class="eyebrow">A NOTE FROM THE MAKER</span><h2>ChargeFX</h2><p>Make Every Charge a Moment.</p><div class="about-divider"></div><small>Designed &amp; Developed by<br><strong>Kim Ji-ho.dev</strong></small><p class="privacy-note">Battery readings are used only to show your charge status. Preferences are kept on-device. Notifications are optional and require your permission. No account or analytics are used.</p><button class="text-button" data-route="about">About &amp; privacy ${icon("back", 14)}</button></aside></div>
-    <footer class="signature">ChargeFX <span>·</span> Version 0.1.1 · Visual prototype</footer>`;
+    <footer class="signature">ChargeFX <span>·</span> Version 0.1.2 · Visual prototype</footer>`;
 }
 
 function aboutScreen() {
-  return `<button class="back-link" data-route="settings">${icon("back", 17)} Settings</button><section class="about-page glass-panel"><img src="/assets/chargefx-mark.svg" width="64" height="64" alt="ChargeFX glass sphere logo"><span class="eyebrow">A CHARGING MOMENT, REIMAGINED</span><h1>ChargeFX</h1><p class="about-tagline">Make Every Charge a Moment.</p><p>Designed &amp; Developed by <strong>Kim Ji-ho.dev</strong></p><div class="about-divider"></div><h2>Privacy, simply</h2><p>ChargeFX stores your favorites and preferences locally in your browser. This visual prototype does not request battery or notification permissions, collect personal information, or make network requests for app features.</p><p>Battery values in this prototype are illustrative and are not live device readings. Native Android battery access and charging activation are not included in this milestone.</p></section>`;
+  return `<button class="back-link" data-route="settings">${icon("back", 17)} Settings</button><section class="about-page glass-panel"><img src="/assets/chargefx-mark.svg" width="64" height="64" alt="ChargeFX glass sphere logo"><span class="eyebrow">A CHARGING MOMENT, REIMAGINED</span><h1>ChargeFX</h1><p class="about-tagline">Make Every Charge a Moment.</p><p>Designed &amp; Developed by <strong>Kim Ji-ho.dev</strong></p><div class="about-divider"></div><h2>Privacy, simply</h2><p>ChargeFX stores favorites and preferences on this device. When app update notifications are enabled, it checks a public version file; it does not send personal information. No account or analytics are used.</p><p>Battery values in this prototype are illustrative and are not live device readings. Native Android battery access and charging activation are not included in this milestone.</p></section>`;
 }
 
 function previewScreen() {
@@ -235,6 +236,7 @@ async function syncNativePreferences() {
     await nativeBattery.setPreferences({
       chargingAnimations: state.settings.chargingAnimations,
       automaticActivation: state.settings.automaticActivation,
+      updateNotifications: state.settings.updateNotifications,
       selectedAnimation: state.selectedAnimation
     });
   } catch (error) {
@@ -298,6 +300,15 @@ async function initializeAndroidBridge() {
     const status = await nativeBattery.getStatus();
     updateBatteryStatus(status);
     await syncNativePreferences();
+    if (state.settings.updateNotifications) {
+      const permission = await nativeBattery.requestNotifications();
+      if (!permission.granted) {
+        state.settings.updateNotifications = false;
+        await syncNativePreferences();
+        saveState(state);
+        notify("Allow notifications in Android settings to receive app update alerts.");
+      }
+    }
     await openNotificationChargingExperience();
   } catch (error) {
     console.error("ChargeFX Android integration could not be initialized.", error);
@@ -385,19 +396,21 @@ app.addEventListener("input", (event) => {
     state.settings[event.target.dataset.setting] = event.target.checked;
     persist();
     document.body.classList.toggle("reduced-motion", Boolean(state.settings.reducedMotion || state.settings.batteryFriendly));
-    if (event.target.dataset.setting === "automaticActivation" && event.target.checked && Capacitor.isNativePlatform()) {
+    if (["automaticActivation", "updateNotifications"].includes(event.target.dataset.setting) && event.target.checked && Capacitor.isNativePlatform()) {
       nativeBattery.requestNotifications().then((result) => {
         if (!result.granted) {
-          state.settings.automaticActivation = false;
+          state.settings[event.target.dataset.setting] = false;
           persist();
           render();
-          notify("Allow notifications in Android settings to use charger alerts.");
+          notify("Allow notifications in Android settings to enable this feature.");
           return;
         }
-        notify("Charger notifications are enabled. Tap the notification to open ChargeFX.");
+        if (event.target.dataset.setting === "automaticActivation") {
+          notify("Charger notifications are enabled. Tap the notification to open ChargeFX.");
+        }
       }).catch((error) => {
         console.error("ChargeFX notification permission request failed.", error);
-        state.settings.automaticActivation = false;
+        state.settings[event.target.dataset.setting] = false;
         persist();
         render();
         notify("Android notification permission could not be requested.");

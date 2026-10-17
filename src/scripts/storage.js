@@ -7,6 +7,7 @@ const defaults = {
   settings: {
     chargingAnimations: true,
     automaticActivation: false,
+    updateNotifications: true,
     showPercentage: true,
     batteryEffects: true,
     fullChargeEffect: true,
