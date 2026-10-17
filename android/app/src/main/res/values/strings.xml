@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">ChargeFX</string>
     <string name="title_activity_main">ChargeFX</string>
+    <string name="dream_service_name">ChargeFX ambient charging</string>
     <string name="package_name">dev.kimjihodev.chargefx</string>
     <string name="custom_url_scheme">dev.kimjihodev.chargefx</string>
 </resources>

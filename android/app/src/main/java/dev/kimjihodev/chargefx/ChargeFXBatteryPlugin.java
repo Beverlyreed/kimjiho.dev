@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.Build;
+import android.provider.Settings;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import com.getcapacitor.JSObject;
@@ -149,6 +150,17 @@ public class ChargeFXBatteryPlugin extends Plugin {
         JSObject result = new JSObject();
         result.put("openCharging", openCharging);
         call.resolve(result);
+    }
+
+    @PluginMethod
+    public void openDreamSettings(PluginCall call) {
+        Intent settingsIntent = new Intent(Settings.ACTION_DREAM_SETTINGS);
+        if (settingsIntent.resolveActivity(getContext().getPackageManager()) == null) {
+            call.reject("Android screen saver settings are not available on this device.");
+            return;
+        }
+        getActivity().startActivity(settingsIntent);
+        call.resolve();
     }
 
     private boolean notificationsEnabled() {

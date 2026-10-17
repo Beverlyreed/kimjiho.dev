@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#080914" />
+    <meta
+      name="description"
+      content="A standalone preview lab for ChargeFX code-drawn charging animations."
+    />
+    <title>ChargeFX Animation Lab</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./script.js" type="module"></script>
+  </head>
+  <body>
+    <main class="lab">
+      <header class="masthead">
+        <a class="wordmark" href="./" aria-label="ChargeFX Animation Lab home">
+          <span class="mark" aria-hidden="true">ϟ</span>
+          <span>Charge<span class="accent">FX</span></span>
+          <span class="lab-label">ANIMATION LAB</span>
+        </a>
+        <button class="motion-toggle" type="button" aria-pressed="false">
+          <span class="motion-indicator"></span>
+          Pause motion
+        </button>
+      </header>
+
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow">CODE-DRAWN CONCEPTS · NO IMAGE ASSETS</p>
+        <h1 id="page-title">See every animation <span>in motion.</span></h1>
+        <p>
+          These individual SVG and CSS animations are also used by the ChargeFX app.
+          Browse the concepts, compare their motion, and preview the same code-drawn
+          scenes that appear in the installed experience.
+        </p>
+      </section>
+
+      <section class="charging-demo" aria-labelledby="charging-demo-title">
+        <div class="demo-heading">
+          <div>
+            <p class="eyebrow">ANDROID SCREEN SAVER · SIMULATED PHONE</p>
+            <h2 id="charging-demo-title">A calm screen while your phone charges.</h2>
+            <p>
+              Plug in, let the phone sit idle, and the ambient ChargeFX screen saver appears.
+              Tap to wake the phone; charging continues. This preview simulates Android's screen
+              saver flow and does not read a real battery or control Android.
+            </p>
+          </div>
+          <div class="demo-controls">
+            <button class="demo-connect" type="button">Plug in charger</button>
+            <button class="demo-now" type="button" hidden>Start screen saver now</button>
+            <button class="demo-show" type="button" hidden>Wait and show again</button>
+            <button class="demo-disconnect" type="button" hidden>Unplug</button>
+          </div>
+        </div>
+
+        <div class="demo-stage">
+          <div class="demo-phone" data-state="disconnected">
+            <div class="demo-phone-frame">
+              <div class="demo-camera"></div>
+              <div class="demo-screen" role="button" tabindex="0" aria-label="Wake or dismiss screen saver">
+                <div class="demo-lock">
+                  <span class="demo-clock">9:41</span>
+                  <span class="demo-date">Saturday, October 17</span>
+                  <span class="demo-lock-hint">Plug in to preview the screen saver</span>
+                </div>
+                <div class="demo-idle">
+                  <span class="demo-idle-icon">ϟ</span>
+                  <strong>Charging</strong>
+                  <span>Screen saver starts when the phone is idle</span>
+                </div>
+                <div class="demo-charge-view" aria-hidden="true">
+                  <div class="ambient-header">
+                    <span class="ambient-date">SATURDAY · OCT 17</span>
+                    <span class="ambient-live"><i></i> CHARGING</span>
+                  </div>
+                  <div class="demo-animation" aria-hidden="true">
+                    <span class="ambient-halo halo-outer"></span>
+                    <span class="ambient-halo halo-inner"></span>
+                    <span class="ambient-orbit"></span>
+                    <span class="ambient-orb"><i></i></span>
+                    <span class="ambient-particle particle-one"></span>
+                    <span class="ambient-particle particle-two"></span>
+                    <span class="ambient-particle particle-three"></span>
+                  </div>
+                  <strong class="demo-percent">64<span>%</span></strong>
+                  <span class="demo-battery-copy">Charging · sample battery level</span>
+                  <div class="ambient-footer">
+                    <span class="ambient-charge-line"><i></i></span>
+                    <span>Tap to wake</span>
+                  </div>
+                </div>
+                <div class="demo-awake">
+                  <span class="demo-clock">9:41</span>
+                  <span class="demo-date">Saturday, October 17</span>
+                  <span class="awake-charge"><i></i> Charging continues</span>
+                  <small>Screen saver dismissed</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="demo-explainer" aria-live="polite">
+            <span class="demo-step"><i>1</i><span>Charger connected</span></span>
+            <span class="demo-step"><i>2</i><span>Phone idle · Android timeout</span></span>
+            <span class="demo-step"><i>3</i><span>ChargeFX screen saver</span></span>
+            <p class="demo-status">Connect the demo charger to start.</p>
+            <p class="demo-platform-note">
+              Android would start the screen saver only after the user selects ChargeFX in Screen saver
+              settings and the device meets its idle/charging conditions. Tapping wakes the screen;
+              unplugging ends the session. It does not replace the brief system charging animation.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <nav class="filters" aria-label="Filter animations">
+        <button class="filter is-active" type="button" data-filter="all" aria-pressed="true">
+          All <span data-count="all"></span>
+        </button>
+        <button class="filter" type="button" data-filter="energy" aria-pressed="false">Energy</button>
+        <button class="filter" type="button" data-filter="galaxy" aria-pressed="false">Galaxy</button>
+        <button class="filter" type="button" data-filter="creatures" aria-pressed="false">Animals &amp; Creatures</button>
+        <button class="filter" type="button" data-filter="gaming" aria-pressed="false">Gaming</button>
+        <button class="filter" type="button" data-filter="aesthetic" aria-pressed="false">Aesthetic</button>
+      </nav>
+
+      <section class="gallery" aria-label="Animation concepts" aria-live="polite"></section>
+
+      <footer class="lab-footer">
+        <span>Independent preview · SVG shapes and CSS motion</span>
+        <span>Nothing here changes the installed app.</span>
+      </footer>
+    </main>
+  </body>
+</html>

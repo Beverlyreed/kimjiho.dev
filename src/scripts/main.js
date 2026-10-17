@@ -2,10 +2,14 @@ import { animations, categories, getAnimation, getCategory } from "../data/anima
 import { loadState, saveState } from "./storage.js";
 import { App as CapacitorApp } from "@capacitor/app";
 import { Capacitor, registerPlugin } from "@capacitor/core";
+import { concepts as animationScenes } from "../../animation-lab/script.js";
+import "../../animation-lab/styles.css";
 import "../styles/main.css";
+import "../styles/animation-integration.css";
 
 const state = loadState();
 state.screen = "intro";
+state.query = "";
 state.battery = { native: false, available: false, percentage: null, charging: null, full: false };
 const app = document.querySelector("#app");
 const nativeBattery = registerPlugin("ChargeFXBattery");
@@ -30,7 +34,9 @@ function categoryName(id) {
 }
 
 function art(animation, extra = "") {
-  return `<div class="art art-${animation.visual} ${extra}" aria-hidden="true"><span class="art-orbit"></span><span class="art-core"><i></i><b></b></span><span class="art-spark spark-one"></span><span class="art-spark spark-two"></span><span class="art-spark spark-three"></span></div>`;
+  const concept = animationScenes.find((scene) => scene.name.toLowerCase().replace(/['’]/g, "") === animation.name.toLowerCase().replace(/['’]/g, ""));
+  const sceneName = animation.name.toLowerCase().replace(/['’]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return `<div class="art art-scene-wrap ${extra}" aria-hidden="true"><div class="scene scene-${sceneName}"><svg viewBox="0 0 160 160" aria-hidden="true">${concept?.scene || ""}</svg></div></div>`;
 }
 
 function favoriteButton(animation, large = false) {
@@ -130,14 +136,15 @@ function settingsScreen() {
         const helper = androidOnly ? "Available in the installed Android app; not active in this browser." : description;
         return `<label class="setting-row"><span><strong>${label}</strong><small>${helper}</small></span><input class="switch-input" type="checkbox" data-setting="${key}" ${state.settings[key] ? "checked" : ""} ${androidOnly ? "disabled" : ""} aria-label="${label}"></label>`;
       }).join("")}
+      <div class="setting-row"><div><strong>Android screen saver</strong><small>Opt in to ChargeFX while charging from Android's Screen saver settings. Android starts it only under its configured idle conditions.</small></div><button class="button button-secondary" data-open-dream-settings ${Capacitor.isNativePlatform() ? "" : "disabled"}>Open settings</button></div>
       <div class="setting-row"><div><strong>Animation speed</strong><small>Set the pace of visual previews.</small></div><select data-setting-select="animationSpeed"><option value="slow" ${state.settings.animationSpeed === "slow" ? "selected" : ""}>Gentle</option><option value="normal" ${state.settings.animationSpeed === "normal" ? "selected" : ""}>Balanced</option><option value="fast" ${state.settings.animationSpeed === "fast" ? "selected" : ""}>Expressive</option></select></div>
     </section>
     <aside class="about-card glass-panel"><img src="/assets/chargefx-mark.svg" alt="" width="46" height="46"><span class="eyebrow">A NOTE FROM THE MAKER</span><h2>ChargeFX</h2><p>Make Every Charge a Moment.</p><div class="about-divider"></div><small>Designed &amp; Developed by<br><strong>Kim Ji-ho.dev</strong></small><p class="privacy-note">Battery readings are used only to show your charge status. Preferences are kept on-device. Notifications are optional and require your permission. No account or analytics are used.</p><button class="text-button" data-route="about">About &amp; privacy ${icon("back", 14)}</button></aside></div>
-    <footer class="signature">ChargeFX <span>·</span> Version 0.1.2 · Visual prototype</footer>`;
+    <footer class="signature">ChargeFX <span>·</span> Version 0.1.3</footer>`;
 }
 
 function aboutScreen() {
-  return `<button class="back-link" data-route="settings">${icon("back", 17)} Settings</button><section class="about-page glass-panel"><img src="/assets/chargefx-mark.svg" width="64" height="64" alt="ChargeFX glass sphere logo"><span class="eyebrow">A CHARGING MOMENT, REIMAGINED</span><h1>ChargeFX</h1><p class="about-tagline">Make Every Charge a Moment.</p><p>Designed &amp; Developed by <strong>Kim Ji-ho.dev</strong></p><div class="about-divider"></div><h2>Privacy, simply</h2><p>ChargeFX stores favorites and preferences on this device. When app update notifications are enabled, it checks a public version file; it does not send personal information. No account or analytics are used.</p><p>Battery values in this prototype are illustrative and are not live device readings. Native Android battery access and charging activation are not included in this milestone.</p></section>`;
+  return `<button class="back-link" data-route="settings">${icon("back", 17)} Settings</button><section class="about-page glass-panel"><img src="/assets/chargefx-mark.svg" width="64" height="64" alt="ChargeFX glass sphere logo"><span class="eyebrow">A CHARGING MOMENT, REIMAGINED</span><h1>ChargeFX</h1><p class="about-tagline">Make Every Charge a Moment.</p><p>Designed &amp; Developed by <strong>Kim Ji-ho.dev</strong></p><div class="about-divider"></div><h2>Privacy, simply</h2><p>ChargeFX stores favorites and preferences on this device. When app update notifications are enabled, it checks a public version file; it does not send personal information. No account or analytics are used.</p><p>The installed Android app reads battery status for the charging experience. The optional screen saver is enabled through Android's own Screen saver settings and cannot replace Android's brief built-in charging animation.</p></section>`;
 }
 
 function previewScreen() {
@@ -376,6 +383,11 @@ app.addEventListener("click", (event) => {
       void artElement.offsetWidth;
       artElement.classList.add("replay");
     }
+  } else if (target.hasAttribute("data-open-dream-settings")) {
+    nativeBattery.openDreamSettings().catch((error) => {
+      console.error("ChargeFX could not open Android screen saver settings.", error);
+      notify("Android screen saver settings are not available on this device.");
+    });
   } else if (target.hasAttribute("data-clear-filters")) {
     state.category = "";
     state.query = "";

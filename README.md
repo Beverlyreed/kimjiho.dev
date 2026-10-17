@@ -24,6 +24,7 @@ npm run cap:sync
 
 - In the Android app, battery percentage and charging status are read from Android. Browser previews clearly label their example values.
 - When enabled and permitted, ChargeFX can show a notification when a charger connects while the app process is running. Tapping it opens the selected charging experience; it never forcibly opens an activity on top of other apps or the lock screen. Android may stop background processes, so notifications are not guaranteed after the app is force-stopped or its process is terminated.
+- The optional ambient charging screen saver is an Android DreamService. Enable **ChargeFX ambient charging** in Android's Screen saver settings and choose when Android should start it. It cannot replace Android's short built-in plug-in animation.
 - Notification permission is requested only when the user enables charger notifications on Android 13+.
 - Version 0.1.2 and newer can check for updates daily in the background. Update alerts require notification permission and open the download page; Android requires user approval to install APK updates. Earlier versions must be updated manually once to gain the update checker.
 - Favorites and settings remain local. The app has no account or analytics; optional update checks only download a public version file.
@@ -34,7 +35,7 @@ npm run cap:sync
 - Home: featured animation, quick preview, category shortcuts, trending collection.
 - Discover: case-insensitive search, category filters, and all 25 concepts.
 - Favorites: add/remove saved concepts and an empty state.
-- Settings: locally persisted preferences, default animation, reduced-motion and battery-friendly options.
+- Settings: locally persisted preferences, default animation, reduced-motion and battery-friendly options, plus an Android screen saver setup shortcut.
 - Preview: replay, favorite, and apply-to-default actions; preview data is clearly marked.
 - `Ctrl/Cmd + K`: jump to animation search.
 
