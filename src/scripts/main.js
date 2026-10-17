@@ -140,7 +140,7 @@ function settingsScreen() {
       <div class="setting-row"><div><strong>Animation speed</strong><small>Set the pace of visual previews.</small></div><select data-setting-select="animationSpeed"><option value="slow" ${state.settings.animationSpeed === "slow" ? "selected" : ""}>Gentle</option><option value="normal" ${state.settings.animationSpeed === "normal" ? "selected" : ""}>Balanced</option><option value="fast" ${state.settings.animationSpeed === "fast" ? "selected" : ""}>Expressive</option></select></div>
     </section>
     <aside class="about-card glass-panel"><img src="/assets/chargefx-mark.svg" alt="" width="46" height="46"><span class="eyebrow">A NOTE FROM THE MAKER</span><h2>ChargeFX</h2><p>Make Every Charge a Moment.</p><div class="about-divider"></div><small>Designed &amp; Developed by<br><strong>Kim Ji-ho.dev</strong></small><p class="privacy-note">Battery readings are used only to show your charge status. Preferences are kept on-device. Notifications are optional and require your permission. No account or analytics are used.</p><button class="text-button" data-route="about">About &amp; privacy ${icon("back", 14)}</button></aside></div>
-    <footer class="signature">ChargeFX <span>·</span> Version 0.1.3</footer>`;
+    <footer class="signature">ChargeFX <span>·</span> Version 0.1.4</footer>`;
 }
 
 function aboutScreen() {
